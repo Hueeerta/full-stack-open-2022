@@ -1,15 +1,13 @@
+const Part = (props) => {
+  return (<p>{props.partName} {props.exercises}</p>)
+}
+
 const Content = (props) => {
   return (
     <>
-    <p>
-        {props.part1Name} {props.part1exercises}
-      </p>
-      <p>
-        {props.part2Name} {props.part2exercises}
-      </p>
-      <p>
-        {props.part3Name} {props.part3exercises}
-      </p>
+      <Part partName={props.part1name} exercises={props.part1exercises} />
+      <Part partName={props.part2name} exercises={props.part2exercises} />
+      <Part partName={props.part3name} exercises={props.part3exercises} />
     </>
   )
 }
