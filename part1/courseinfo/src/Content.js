@@ -1,14 +1,16 @@
 const Content = (props) => {
-
-  const displayContent = () => {
-    let elements = [];
-    for (let index = 0; index < props.parts.length; index++) {
-      elements[index] = <p>{props.parts[index].name} {props.parts[index].exercises}</p>;
-    }
-    return elements
-  }
-
-  return displayContent()
-
+  return (
+    <>
+    <p>
+        {props.part1Name} {props.part1exercises}
+      </p>
+      <p>
+        {props.part2Name} {props.part2exercises}
+      </p>
+      <p>
+        {props.part3Name} {props.part3exercises}
+      </p>
+    </>
+  )
 }
 export default Content
