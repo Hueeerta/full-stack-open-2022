@@ -1,14 +1,27 @@
 const Part = (props) => {
-  return (<p>{props.partName} {props.exercises}</p>)
-}
+  return (
+    <p>
+      {props.partName} {props.exercises}
+    </p>
+  );
+};
 
 const Content = (props) => {
   return (
     <>
-      <Part partName={props.part1name} exercises={props.part1exercises} />
-      <Part partName={props.part2name} exercises={props.part2exercises} />
-      <Part partName={props.part3name} exercises={props.part3exercises} />
+      <Part
+        partName={props.parts[0].name}
+        exercises={props.parts[0].exercises}
+      />
+      <Part
+        partName={props.parts[1].name}
+        exercises={props.parts[1].exercises}
+      />
+      <Part
+        partName={props.parts[2].name}
+        exercises={props.parts[2].exercises}
+      />
     </>
-  )
-}
-export default Content
+  );
+};
+export default Content;
