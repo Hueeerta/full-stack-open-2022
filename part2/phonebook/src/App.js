@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState();
-  const [newName, setNewName] = useState(["Arto Hellas"]);
+  const [persons, setPersons] = useState("");
+  const [newName, setNewName] = useState([]);
 
   const handleInputChange = (event) => {
     setPersons(event.target.value);
@@ -10,7 +10,10 @@ const App = () => {
 
   const handleNewNames = (event) => {
     event.preventDefault();
-    setNewName(newName.concat(persons));
+    newName.indexOf(persons) < 0
+      ? setNewName(newName.concat(persons))
+      : alert(`${persons} already exist`);
+    setPersons("");
   };
 
   return (
@@ -28,7 +31,9 @@ const App = () => {
           />
         </label>
         <br />
-        <button type="submit" onClick={handleNewNames}>add</button>
+        <button type="submit" onClick={handleNewNames}>
+          add
+        </button>
       </form>
       <h2>Numbers</h2>
       {newName.map((contact) => (
