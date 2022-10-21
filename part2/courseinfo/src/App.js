@@ -13,8 +13,7 @@ const Content = ({ parts }) => {
 };
 
 const Total = ({parts}) => {
-  let total = 0;
-  parts.map(part => total += part.exercises)
+  const total = parts.reduce((accumulator,currentItem) => accumulator + currentItem.exercises,0)
   return <h4 className="app-course-total">total of {total} exercises</h4>
 } 
 
