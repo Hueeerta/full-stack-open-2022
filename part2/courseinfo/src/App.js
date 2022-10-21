@@ -12,11 +12,18 @@ const Content = ({ parts }) => {
   );
 };
 
+const Total = ({parts}) => {
+  let total = 0;
+  parts.map(part => total += part.exercises)
+  return <h4 className="app-course-total">total of {total} exercises</h4>
+} 
+
 const Course = ({ course }) => {
   return (
     <section className="app-course">
       <Header name={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </section>
   );
 };
@@ -40,6 +47,11 @@ const App = () => {
         name: "State of a component",
         exercises: 14,
         id: 3,
+      },
+      {
+        name: "Redux",
+        exercises: 11,
+        id: 4,
       },
     ],
   };
