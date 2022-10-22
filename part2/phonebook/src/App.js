@@ -1,19 +1,35 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState("");
+  const [persons, setPersons] = useState({ name: "", number: "" });
   const [newName, setNewName] = useState([]);
 
   const handleInputChange = (event) => {
-    setPersons(event.target.value);
+    const newPerson = { ...persons };
+    event.target.id === "name"
+      ? (newPerson.name = event.target.value)
+      : (newPerson.number = event.target.value);
+    setPersons(newPerson);
   };
 
   const handleNewNames = (event) => {
     event.preventDefault();
-    newName.indexOf(persons) < 0
-      ? setNewName(newName.concat(persons))
-      : alert(`${persons} already exist`);
-    setPersons("");
+    const newNameKeys = Object.getOwnPropertyNames(newName);
+    let inputIsNew = true;
+    for (const key of newNameKeys) {
+      if (newName[key].name === persons.name) {
+        inputIsNew = false;
+        break;
+      }
+    }
+    if (inputIsNew) {
+      const newPerson = [...newName];
+      newPerson.push(persons);
+      setNewName(newPerson);
+    } else {
+      alert(`${persons.name} is already added to phonebook`);
+    }
+    setPersons({ name: "", number: "" });
   };
 
   return (
@@ -25,8 +41,19 @@ const App = () => {
           <input
             id="name"
             type="text"
-            value={persons}
+            value={persons.name}
             placeholder="Contact name"
+            onChange={handleInputChange}
+          />
+        </label>
+        <br />
+        <label htmlFor="number">
+          number:
+          <input
+            id="number"
+            type="text"
+            value={persons.number}
+            placeholder="Contact number"
             onChange={handleInputChange}
           />
         </label>
@@ -36,8 +63,10 @@ const App = () => {
         </button>
       </form>
       <h2>Numbers</h2>
-      {newName.map((contact) => (
-        <p key={contact}>{contact}</p>
+      {newName.map((contact, index) => (
+        <p key={index + "-" + contact.name}>
+          {contact.name} {contact.number}
+        </p>
       ))}
     </>
   );
