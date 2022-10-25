@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import Search from "./components/Search";
+import ContactForm from "./components/ContactForm";
+import ContactList from "./components/ContactList";
 
 const App = () => {
   const [persons, setPersons] = useState({ name: "", number: "" });
@@ -78,50 +81,13 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
-      <label>
-        filter shown with
-        <input
-          id="search"
-          type="text"
-          value={nameSearch}
-          placeholder="name search"
-          onChange={handeSearch}
-        />
-      </label>
-      <h2>add a new</h2>
-      <form>
-        <label htmlFor="name">
-          name:
-          <input
-            id="name"
-            type="text"
-            value={persons.name}
-            placeholder="contact name"
-            onChange={handleInputChange}
-          />
-        </label>
-        <br />
-        <label htmlFor="number">
-          number:
-          <input
-            id="number"
-            type="text"
-            value={persons.number}
-            placeholder="contact number"
-            onChange={handleInputChange}
-          />
-        </label>
-        <br />
-        <button type="submit" onClick={handleNewContactList}>
-          add
-        </button>
-      </form>
-      <h2>Numbers</h2>
-      {newContactList.map((contact, index) => (
-        <p key={index + "-" + contact.name}>
-          {contact.name} {contact.number}
-        </p>
-      ))}
+      <Search nameSearch={nameSearch} handeSearch={handeSearch} />
+      <ContactForm
+        persons={persons}
+        handleInputChange={handleInputChange}
+        handleNewContactList={handleNewContactList}
+      />
+      <ContactList newContactList={newContactList} />
     </>
   );
 };
