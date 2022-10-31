@@ -1,19 +1,20 @@
 const Contact = ({ name, number }) => {
   return (
-    <p>
+    <p className="contact">
       {name} {number}
     </p>
   );
 };
 
-const ContactList = ({ newContactList }) => {
+const ContactList = ({ contactList }) => {
+  console.log('list',contactList)
+  
   return (
     <>
       <h2>Numbers</h2>
-      {newContactList.map((contact, index) => (
+      {contactList.map((contact) => (
         <Contact
-          key={index + "-" + contact.name}
-          index={index}
+          key={contact.id+'-'+contact.name}
           name={contact.name}
           number={contact.number}
         />

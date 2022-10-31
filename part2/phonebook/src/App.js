@@ -1,50 +1,56 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Search from "./components/Search";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 
 const App = () => {
   const [persons, setPersons] = useState({ name: "", number: "" });
-  const [newContactList, setNewContactList] = useState([]);
+  const [contactList, setContactList] = useState([]);
   const [nameSearch, setNewSearch] = useState("");
 
   const getDataBase = () => {
-    const contactList = JSON.parse(localStorage.getItem("contactList"));
-    if (contactList) {
-      return contactList;
-    } else {
-      return [];
-    }
+    return axios
+      .get("http://localhost:3001/persons")
+      .then((response) => {
+        console.log("axios GET data response:", response.statusText);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error.code, ":", error.message);
+      });
   };
 
   const postDataBase = (newData) => {
-    localStorage.setItem("contactList", JSON.stringify(newData));
+    axios
+      .post("http://localhost:3001/persons", newData)
+      .then((response) => {
+        console.log("axios POST data response:", response.statusText);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error.code, ":", error.message);
+      });
   };
 
   useEffect(() => {
-    localStorage.setItem(
-      "contactList",
-      JSON.stringify([
-        { name: "Arto Hellas", number: "040-123456" },
-        { name: "Ada Lovelace", number: "39-44-5323523" },
-        { name: "Dan Abramov", number: "12-43-234345" },
-        { name: "Mary Poppendieck", number: "39-23-6423122" },
-      ])
-    );
-    setNewContactList(getDataBase());
+    getDataBase().then((data) => setContactList(data));
   }, []);
 
   const handeSearch = (event) => {
     setNewSearch(event.target.value);
+    const domContactElements = [...document.getElementsByClassName("contact")];
+    console.log(domContactElements);
     if (event.target.value !== "") {
-      const newSearch = getDataBase().filter(
-        (contact) =>
-          contact.name.toLowerCase().indexOf(event.target.value.toLowerCase()) >
-          -1
+      domContactElements.map((contact) =>
+        contact.textContent
+          .toLowerCase()
+          .indexOf(event.target.value.toLowerCase()) > -1
+          ? contact.classList.remove("hide")
+          : contact.classList.add("hide")
       );
-      setNewContactList(newSearch);
     } else {
-      setNewContactList(getDataBase());
+      domContactElements.map((contact) => contact.classList.remove("hide"));
     }
   };
 
@@ -56,22 +62,21 @@ const App = () => {
     setPersons(newPerson);
   };
 
-  const handleNewContactList = (event) => {
+  const handleContactList = (event) => {
     event.preventDefault();
-    setNewContactList(getDataBase());
-    const newContactListKeys = Object.getOwnPropertyNames(newContactList);
+    const contactListKeys = Object.getOwnPropertyNames(contactList);
     let inputIsNew = true;
-    for (const key of newContactListKeys) {
-      if (newContactList[key].name === persons.name) {
+    for (const key of contactListKeys) {
+      if (contactList[key].name === persons.name) {
         inputIsNew = false;
         break;
       }
     }
     if (inputIsNew) {
-      const newPersonList = [...newContactList];
+      const newPersonList = [...contactList];
       newPersonList.push(persons);
-      postDataBase(newPersonList);
-      setNewContactList(newPersonList);
+      setContactList(newPersonList);
+      postDataBase(persons);
     } else {
       alert(`${persons.name} is already added to phonebook.`);
     }
@@ -85,9 +90,9 @@ const App = () => {
       <ContactForm
         persons={persons}
         handleInputChange={handleInputChange}
-        handleNewContactList={handleNewContactList}
+        handleContactList={handleContactList}
       />
-      <ContactList newContactList={newContactList} />
+      <ContactList contactList={contactList} />
     </>
   );
 };

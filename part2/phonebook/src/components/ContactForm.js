@@ -1,4 +1,4 @@
-const ContactForm = ({ persons, handleInputChange, handleNewContactList }) => {
+const ContactForm = ({ persons, handleInputChange, handleContactList }) => {
   return (
     <>
       <h2>add a new</h2>
@@ -25,7 +25,7 @@ const ContactForm = ({ persons, handleInputChange, handleNewContactList }) => {
           />
         </label>
         <br />
-        <button type="submit" onClick={handleNewContactList}>
+        <button type="submit" onClick={handleContactList}>
           add
         </button>
       </form>
