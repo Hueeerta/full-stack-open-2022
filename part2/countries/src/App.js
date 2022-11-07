@@ -7,74 +7,81 @@ const App = () => {
   const [countryToDisplay, setCountryToDisplay] = useState({});
 
   useEffect(() => {
-    getCountries().then((data) => {
-      setCountryList(data);
-      console.log("Country list setted");
-    });
-  }, []);
-
-  const getCountries = () => {
-    return axios
+    axios
       .get("https://restcountries.com/v3.1/all")
       .then((response) => response.data)
+      .then(setCountryList)
       .catch((error) => console.error(error.message));
+  }, []);
+
+  const getListOfCountries = () => [
+    ...document.getElementsByClassName("country"),
+  ];
+
+  const showListOfCountries = (countryListToShow) => {
+    countryListToShow.classList.remove("hide");
+  };
+
+  const hideListOfCountries = () => {
+    getListOfCountries().map((country) => country.classList.add("hide"));
+  };
+
+  const showCountryDataDisplay = () =>
+    document.getElementById("countryInfoDisplay").classList.remove("hide");
+
+  const hideCountryDataDisplay = () => {
+    document.getElementById("countryInfoDisplay").classList.add("hide");
+    document.getElementById("languages").innerHTML = "";
   };
 
   const setCountryDataToDisplay = (countryToCompare) => {
     const currentCountry = countryList.filter(
       (country) =>
-        country.name.common.toLowerCase().indexOf(countryToCompare) > -1
+        country.name.common
+          .toLowerCase()
+          .indexOf(countryToCompare.toLowerCase()) > -1
     )[0];
     setCountryToDisplay(currentCountry);
-    console.log(currentCountry);
     document.getElementById("name").textContent = currentCountry.name.common;
     document.getElementById("capital").textContent =
       "capital " + currentCountry.capital[0];
     document.getElementById("area").textContent = "area " + currentCountry.area;
     document.getElementById("flag").src = currentCountry.flags.svg;
-    document.getElementById("languages").innerHTML = "";
     const lngKeys = Object.getOwnPropertyNames(currentCountry.languages);
     const languageDomList = document.getElementById("languages");
+    languageDomList.innerHTML = "";
     lngKeys.map((lng) => {
-      console.log("language", currentCountry.languages[lng]);
       const newLng = document.createElement("li");
       newLng.innerHTML = currentCountry.languages[lng];
       languageDomList.appendChild(newLng);
     });
-    document.getElementById("countryInfoDisplay").classList.remove("hide");
+    showCountryDataDisplay();
   };
 
   const handleCountrySearch = (event) => {
-    setTargetCountry(event.target.value);
-    const countryDomList = [...document.getElementsByClassName("country")];
-    if (event.target.value !== "") {
+    const inputValue = event.target.value;
+    setTargetCountry(inputValue);
+    const countryDomList = getListOfCountries();
+    if (inputValue !== "") {
       const filtredCountries = countryDomList.filter(
         (li) =>
-          li.innerText.toLowerCase().indexOf(event.target.value.toLowerCase()) >
-          -1
+          li.innerText.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
       );
-      console.log(
-        "countries listed",
-        filtredCountries.length,
-        filtredCountries
-      );
+      hideListOfCountries();
+      hideCountryDataDisplay();
       if (filtredCountries.length - 1 <= 1) {
-        countryDomList.map((country) => country.classList.add("hide"));
-        setCountryDataToDisplay(event.target.value.toLowerCase());
+        // Just one Match
+        setCountryDataToDisplay(inputValue);
       } else if (filtredCountries.length - 1 <= 10) {
-        countryDomList.map((country) => country.classList.add("hide"));
-        filtredCountries.map((country) => country.classList.remove("hide"));
+        // Less or equal to 10 countries
+        filtredCountries.map((country) => showListOfCountries(country));
         countryDomList[0].classList.add("hide");
-        document.getElementById("countryInfoDisplay").classList.add("hide");
-        document.getElementById("languages").innerHTML = "";
       } else {
-        countryDomList.map((country) => country.classList.add("hide"));
-        countryDomList[0].classList.remove("hide");
-        document.getElementById("countryInfoDisplay").classList.add("hide");
-        document.getElementById("languages").innerHTML = "";
+        // More than 10 countries
+        showListOfCountries(countryDomList[0]);
       }
     } else {
-      countryDomList.map((country) => country.classList.add("hide"));
+      hideListOfCountries();
     }
   };
 
@@ -100,6 +107,11 @@ const App = () => {
             className="country hide"
           >
             {country.name.common}
+            <button
+              onClick={() => setCountryDataToDisplay(country.name.common)}
+            >
+              show
+            </button>
           </li>
         ))}
       </ul>
