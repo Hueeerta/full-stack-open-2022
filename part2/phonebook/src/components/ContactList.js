@@ -12,8 +12,6 @@ const Contact = ({ name, number, removeHandler }) => {
 };
 
 const ContactList = ({ contactList, remove, setMessage, callback }) => {
-  console.log("list", contactList);
-
   return (
     <>
       <h2>Numbers</h2>
@@ -24,9 +22,20 @@ const ContactList = ({ contactList, remove, setMessage, callback }) => {
           number={contact.number}
           removeHandler={() => {
             if (window.confirm(`Delete ${contact.name}?`)) {
-              remove(contact).then(() => {
-                setMessage(`${contact.name} removed.`);
-                callback();
+              remove(contact).then((response) => {
+                console.log("deletion response:", response);
+                if (response === "ERR_BAD_REQUEST") {
+                  setMessage({
+                    type: "error",
+                    text: `Information of ${contact.name} has already been removed from server.`,
+                  });
+                } else {
+                  setMessage({
+                    type: "success",
+                    text: `${contact.name} removed.`,
+                  });
+                  callback();
+                }
               });
             }
           }}

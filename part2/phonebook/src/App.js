@@ -9,8 +9,8 @@ const App = () => {
   const [person, setPerson] = useState({ name: "", number: "" });
   const [contactList, setContactList] = useState([]);
   const [nameSearch, setNewSearch] = useState("");
-  const [message, setMessage] = useState("");
-  
+  const [message, setMessage] = useState({ type: "", text: "" });
+
   useEffect(() => {
     personsService.getAll().then((data) => setContactList(data));
   }, []);
@@ -54,7 +54,7 @@ const App = () => {
     }
     if (inputIsNew) {
       personsService.create(person).then(() => {
-        setMessage(`Added ${person.name}`);
+        setMessage({ type: "success", text: `Added ${person.name}` });
         personsService.getAll().then((data) => setContactList(data));
       });
       setPerson({ name: "", number: "" });
@@ -65,7 +65,10 @@ const App = () => {
         )
       ) {
         personsService.update(matchContact).then(() => {
-          setMessage(`New phone ${person.number} added to ${person.name}`);
+          setMessage({
+            type: "success",
+            text: `New phone ${person.number} added to ${person.name}`,
+          });
           personsService.getAll().then((data) => setContactList(data));
         });
         setPerson({ name: "", number: "" });
@@ -83,7 +86,14 @@ const App = () => {
         handleInputChange={handleInputChange}
         handleContactList={handleContactList}
       />
-      <ContactList contactList={contactList} remove={personsService.remove} setMessage={setMessage} callback={() => { personsService.getAll().then((data) => setContactList(data)); }} />
+      <ContactList
+        contactList={contactList}
+        remove={personsService.remove}
+        setMessage={setMessage}
+        callback={() => {
+          personsService.getAll().then((data) => setContactList(data));
+        }}
+      />
     </>
   );
 };

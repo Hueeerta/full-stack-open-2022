@@ -6,8 +6,15 @@
   display: none;
 }
 
-.message {
+.error {
+  color: red;
+}
+
+.success {
   color: green;
+}
+
+.message {
   background: lightgrey;
   font-size: 20px;
   border-style: solid;
