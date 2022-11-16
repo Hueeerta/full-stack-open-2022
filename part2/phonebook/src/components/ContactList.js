@@ -1,17 +1,17 @@
-const Contact = ({ name, number, remove }) => {
+const Contact = ({ name, number, removeHandler }) => {
   return (
     <>
       <div className="contact">
         <span>
           {name} {number}
         </span>
-        <button onClick={remove}>delete</button>
+        <button onClick={removeHandler}>delete</button>
       </div>
     </>
   );
 };
 
-const ContactList = ({ contactList, remove }) => {
+const ContactList = ({ contactList, remove, setMessage, callback }) => {
   console.log("list", contactList);
 
   return (
@@ -22,7 +22,14 @@ const ContactList = ({ contactList, remove }) => {
           key={contact.id + "-" + contact.name}
           name={contact.name}
           number={contact.number}
-          remove={() => remove(contact)}
+          removeHandler={() => {
+            if (window.confirm(`Delete ${contact.name}?`)) {
+              remove(contact).then(() => {
+                setMessage(`${contact.name} removed.`);
+                callback();
+              });
+            }
+          }}
         />
       ))}
     </>

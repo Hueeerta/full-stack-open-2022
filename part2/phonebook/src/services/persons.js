@@ -26,17 +26,15 @@ const create = (newData) => {
 };
 
 const remove = (contact) => {
-  if (window.confirm(`Delete ${contact.name}?`)) {
-    axios
-      .delete(`${baseUrl}/${contact.id}`)
-      .then((response) => {
-        console.log("axios DELETE data response:", response.statusText);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error.code, ":", error.message);
-      });
-  }
+  return axios
+    .delete(`${baseUrl}/${contact.id}`)
+    .then((response) => {
+      console.log("axios DELETE data response:", response.statusText);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error(error.code, ":", error.message);
+    });
 };
 
 const update = (contact) => {

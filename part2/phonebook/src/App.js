@@ -3,12 +3,14 @@ import personsService from "./services/persons";
 import Search from "./components/Search";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [person, setPerson] = useState({ name: "", number: "" });
   const [contactList, setContactList] = useState([]);
   const [nameSearch, setNewSearch] = useState("");
-
+  const [message, setMessage] = useState("");
+  
   useEffect(() => {
     personsService.getAll().then((data) => setContactList(data));
   }, []);
@@ -46,12 +48,13 @@ const App = () => {
     for (const key of contactListKeys) {
       if (contactList[key].name === person.name) {
         inputIsNew = false;
-        matchContact = {...contactList[key],number:person.number};
+        matchContact = { ...contactList[key], number: person.number };
         break;
       }
     }
     if (inputIsNew) {
       personsService.create(person).then(() => {
+        setMessage(`Added ${person.name}`);
         personsService.getAll().then((data) => setContactList(data));
       });
       setPerson({ name: "", number: "" });
@@ -62,6 +65,7 @@ const App = () => {
         )
       ) {
         personsService.update(matchContact).then(() => {
+          setMessage(`New phone ${person.number} added to ${person.name}`);
           personsService.getAll().then((data) => setContactList(data));
         });
         setPerson({ name: "", number: "" });
@@ -72,13 +76,14 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Search nameSearch={nameSearch} handeSearch={handeSearch} />
       <ContactForm
         person={person}
         handleInputChange={handleInputChange}
         handleContactList={handleContactList}
       />
-      <ContactList contactList={contactList} remove={personsService.remove} />
+      <ContactList contactList={contactList} remove={personsService.remove} setMessage={setMessage} callback={() => { personsService.getAll().then((data) => setContactList(data)); }} />
     </>
   );
 };
