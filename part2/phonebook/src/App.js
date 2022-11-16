@@ -5,7 +5,7 @@ import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 
 const App = () => {
-  const [persons, setPersons] = useState({ name: "", number: "" });
+  const [person, setPerson] = useState({ name: "", number: "" });
   const [contactList, setContactList] = useState([]);
   const [nameSearch, setNewSearch] = useState("");
 
@@ -55,11 +55,11 @@ const App = () => {
   };
 
   const handleInputChange = (event) => {
-    const newPerson = { ...persons };
+    const newPerson = { ...person };
     event.target.id === "name"
       ? (newPerson.name = event.target.value)
       : (newPerson.number = event.target.value);
-    setPersons(newPerson);
+    setPerson(newPerson);
   };
 
   const handleContactList = (event) => {
@@ -67,20 +67,20 @@ const App = () => {
     const contactListKeys = Object.getOwnPropertyNames(contactList);
     let inputIsNew = true;
     for (const key of contactListKeys) {
-      if (contactList[key].name === persons.name) {
+      if (contactList[key].name === person.name) {
         inputIsNew = false;
         break;
       }
     }
     if (inputIsNew) {
       const newPersonList = [...contactList];
-      newPersonList.push(persons);
+      newPersonList.push(person);
       setContactList(newPersonList);
-      postDataBase(persons);
+      postDataBase(person);
     } else {
-      alert(`${persons.name} is already added to phonebook.`);
+      alert(`${person.name} is already added to phonebook.`);
     }
-    setPersons({ name: "", number: "" });
+    setPerson({ name: "", number: "" });
   };
 
   return (
@@ -88,7 +88,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Search nameSearch={nameSearch} handeSearch={handeSearch} />
       <ContactForm
-        persons={persons}
+        person={person}
         handleInputChange={handleInputChange}
         handleContactList={handleContactList}
       />

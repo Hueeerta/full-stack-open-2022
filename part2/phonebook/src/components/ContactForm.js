@@ -1,4 +1,4 @@
-const ContactForm = ({ persons, handleInputChange, handleContactList }) => {
+const ContactForm = ({ person, handleInputChange, handleContactList }) => {
   return (
     <>
       <h2>add a new</h2>
@@ -8,7 +8,7 @@ const ContactForm = ({ persons, handleInputChange, handleContactList }) => {
           <input
             id="name"
             type="text"
-            value={persons.name}
+            value={person.name}
             placeholder="contact name"
             onChange={handleInputChange}
           />
@@ -19,7 +19,7 @@ const ContactForm = ({ persons, handleInputChange, handleContactList }) => {
           <input
             id="number"
             type="text"
-            value={persons.number}
+            value={person.number}
             placeholder="contact number"
             onChange={handleInputChange}
           />
