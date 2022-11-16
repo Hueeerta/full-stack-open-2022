@@ -39,4 +39,16 @@ const remove = (contact) => {
   }
 };
 
-export default { getAll, create, remove };
+const update = (contact) => {
+  return axios
+    .put(`${baseUrl}/${contact.id}`, contact)
+    .then((response) => {
+      console.log("axios UPDATE data response:", response.statusText);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error(error.code, ":", error.message);
+    });
+};
+
+export default { getAll, create, remove, update };

@@ -42,9 +42,11 @@ const App = () => {
     event.preventDefault();
     const contactListKeys = Object.getOwnPropertyNames(contactList);
     let inputIsNew = true;
+    let matchContact = {};
     for (const key of contactListKeys) {
       if (contactList[key].name === person.name) {
         inputIsNew = false;
+        matchContact = {...contactList[key],number:person.number};
         break;
       }
     }
@@ -52,10 +54,19 @@ const App = () => {
       personsService.create(person).then(() => {
         personsService.getAll().then((data) => setContactList(data));
       });
+      setPerson({ name: "", number: "" });
     } else {
-      alert(`${person.name} is already added to phonebook.`);
+      if (
+        window.confirm(
+          `${matchContact.name} is already added to phonebook, replace the old number with the new one?`
+        )
+      ) {
+        personsService.update(matchContact).then(() => {
+          personsService.getAll().then((data) => setContactList(data));
+        });
+        setPerson({ name: "", number: "" });
+      }
     }
-    setPerson({ name: "", number: "" });
   };
 
   return (
