@@ -14,15 +14,29 @@ const getAll = () => {
 };
 
 const create = (newData) => {
-  axios
+  return axios
     .post(baseUrl, newData)
     .then((response) => {
       console.log("axios POST data response:", response.statusText);
-      console.log(response.data);
+      return response.data;
     })
     .catch((error) => {
       console.error(error.code, ":", error.message);
     });
 };
 
-export default { getAll, create };
+const remove = (contact) => {
+  if (window.confirm(`Delete ${contact.name}?`)) {
+    axios
+      .delete(`${baseUrl}/${contact.id}`)
+      .then((response) => {
+        console.log("axios DELETE data response:", response.statusText);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error.code, ":", error.message);
+      });
+  }
+};
+
+export default { getAll, create, remove };

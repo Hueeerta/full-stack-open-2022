@@ -49,10 +49,9 @@ const App = () => {
       }
     }
     if (inputIsNew) {
-      const newPersonList = [...contactList];
-      newPersonList.push(person);
-      setContactList(newPersonList);
-      personsService.create(person);
+      personsService.create(person).then(() => {
+        personsService.getAll().then((data) => setContactList(data));
+      });
     } else {
       alert(`${person.name} is already added to phonebook.`);
     }
@@ -68,7 +67,7 @@ const App = () => {
         handleInputChange={handleInputChange}
         handleContactList={handleContactList}
       />
-      <ContactList contactList={contactList} />
+      <ContactList contactList={contactList} remove={personsService.remove} />
     </>
   );
 };
