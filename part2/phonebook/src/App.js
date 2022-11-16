@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personsService from "./services/persons";
 import Search from "./components/Search";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
@@ -9,32 +9,8 @@ const App = () => {
   const [contactList, setContactList] = useState([]);
   const [nameSearch, setNewSearch] = useState("");
 
-  const getDataBase = () => {
-    return axios
-      .get("http://localhost:3001/persons")
-      .then((response) => {
-        console.log("axios GET data response:", response.statusText);
-        return response.data;
-      })
-      .catch((error) => {
-        console.error(error.code, ":", error.message);
-      });
-  };
-
-  const postDataBase = (newData) => {
-    axios
-      .post("http://localhost:3001/persons", newData)
-      .then((response) => {
-        console.log("axios POST data response:", response.statusText);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error.code, ":", error.message);
-      });
-  };
-
   useEffect(() => {
-    getDataBase().then((data) => setContactList(data));
+    personsService.getAll().then((data) => setContactList(data));
   }, []);
 
   const handeSearch = (event) => {
@@ -76,7 +52,7 @@ const App = () => {
       const newPersonList = [...contactList];
       newPersonList.push(person);
       setContactList(newPersonList);
-      postDataBase(person);
+      personsService.create(person);
     } else {
       alert(`${person.name} is already added to phonebook.`);
     }
